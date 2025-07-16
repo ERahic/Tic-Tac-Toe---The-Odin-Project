@@ -192,6 +192,7 @@ const startGame = (function () {
             if (totalMoves === 9) {
               alert(`Game Over! It's A Draw!`);
               console.log(`Game Over! It's A Draw!`);
+              endGame.disableSquareClick();
               return;
             }
 
@@ -199,6 +200,7 @@ const startGame = (function () {
             if (winner) {
               alert(`Game Over! ${currentPlayer.name} Wins The Game!`);
               console.log(`Game Over! ${currentPlayer.name} Wins The Game!`);
+              endGame.disableSquareClick();
               return;
             }
 
@@ -213,6 +215,18 @@ const startGame = (function () {
       squareClicked();
     }
   });
+})();
+
+// Disable clicks on squares after the game is declared a draw or if there is a winner
+const endGame = (function () {
+  const disableSquareClick = function () {
+    const squares = document.querySelectorAll(".square");
+    for (const square of squares) {
+      square.style.pointerEvents = "none";
+    }
+    console.log(`Game Is Over! Please Click On Reset Game To Play Again!`);
+  };
+  return { disableSquareClick };
 })();
 
 // Reset the Game function
