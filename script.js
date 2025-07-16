@@ -99,12 +99,12 @@ const beginGame = (function () {
       playerTurnModule.initializePlayers(player1, player2);
       const firstTurn = playerTurnModule.currentPlayer();
       alert(
-        `${firstTurn.name} Will Go First! Place Your "${firstTurn.mark}" On An Available Cell!`
+        `${firstTurn.name} Will Go First! Place Your "${firstTurn.mark}" On An Empty Square!`
       );
       console.log(
-        `${firstTurn.name} Will Go First! Place Your "${firstTurn.mark}" On An Available Cell!`
+        `${firstTurn.name} Will Go First! Place Your "${firstTurn.mark}" On An Empty Square!`
       );
-      // Click on squares to mark "X" or "O" depending on whos turn it is
+      // Click on squares to mark "X" or "O" depending on whose turn it is
       const squareClicked = function () {
         const squares = document.querySelectorAll(".square");
         for (const square of squares) {
