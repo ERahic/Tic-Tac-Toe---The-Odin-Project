@@ -24,7 +24,7 @@ const gameBoard = (function () {
     gameBoardArray.forEach((square, index) => {
       const squareDiv = document.createElement("div");
       squareDiv.classList.add("square");
-      squareDiv.id = `square-${index}`;
+      squareDiv.id = `Square-${index}`;
       domReference.gridContainer.appendChild(squareDiv);
     });
   };
@@ -50,12 +50,35 @@ const playerModule = (function () {
   return { initializePlayers, receivePlayers };
 })();
 
+// Have the first round be random and change the player
+const playerTurnModule = (function () {
+  let players = [];
+  let currentPlayerIndex = 0;
+
+  const initializePlayers = function (player1, player2) {
+    players = [player1, player2];
+    currentPlayerIndex = Math.random() < 0.5 ? 0 : 1;
+  };
+
+  const currentPlayer = function () {
+    return players[currentPlayerIndex];
+  };
+
+  const playerTurn = function () {
+    currentPlayerIndex = currentPlayerIndex === 0 ? 1 : 0;
+  };
+
+  return { initializePlayers, currentPlayer, playerTurn };
+})();
+
 // Generate grid when clicking on start game
 const beginGame = (function () {
+  // Start the game
   domReference.startButton.addEventListener("click", () => {
     console.log("Start Button Clicked");
     playerModule.initializePlayers();
     const { player1, player2 } = playerModule.receivePlayers();
+    // Check if there are names entered for both inputs
     if (player1.name === "" || player2.name === "") {
       alert("ERROR! Please Enter The Name For Both Players");
       console.log("ERROR! Please Enter The Name For Both Players");
@@ -67,10 +90,45 @@ const beginGame = (function () {
       console.log(
         `${player1.name} (${player1.mark}) vs ${player2.name} (${player2.mark})`
       );
+      // Render the gameboard and disable the input fields
       gameBoard.render();
       startButton.style.display = "none";
       domReference.player1Input.disabled = true;
       domReference.player2Input.disabled = true;
+      //Player Turn
+      playerTurnModule.initializePlayers(player1, player2);
+      const firstTurn = playerTurnModule.currentPlayer();
+      alert(
+        `${firstTurn.name} Will Go First! Place Your "${firstTurn.mark}" On An Available Cell!`
+      );
+      console.log(
+        `${firstTurn.name} Will Go First! Place Your "${firstTurn.mark}" On An Available Cell!`
+      );
+      // Click on squares to mark "X" or "O" depending on whos turn it is
+      const squareClicked = function () {
+        const squares = document.querySelectorAll(".square");
+        for (const square of squares) {
+          square.addEventListener("click", function (e) {
+            const chosenSquare = e.target;
+            // Check if chosen square is already marked
+            if (chosenSquare.innerHTML !== "") {
+              alert(`Square Already Marked! Choose An Empty Square!`);
+              console.log(`Square Already Marked! Choose An Empty Square!`);
+              return;
+            }
+            // Current player will place thier mark on the empty square
+            const currentPlayer = playerTurnModule.currentPlayer();
+            chosenSquare.innerHTML = currentPlayer.mark;
+            console.log(`"${currentPlayer.mark}" Placed on ${chosenSquare.id}`);
+            // Change players after square is marked
+            playerTurnModule.playerTurn();
+            console.log(
+              `${playerTurnModule.currentPlayer().name}'s Turn Is Next!`
+            );
+          });
+        }
+      };
+      squareClicked();
     }
   });
   return { startButton };
