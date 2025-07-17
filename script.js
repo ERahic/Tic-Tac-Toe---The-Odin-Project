@@ -6,6 +6,17 @@ const domReference = (function () {
   startButton = document.querySelector("#startBtn");
   resetButton = document.querySelector("#resetBtn");
 
+  //Whenever there is any text inside of either input, change the border to green
+  player1Input.addEventListener("input", function () {
+    player1Input.style.border =
+      player1Input.value !== "" ? "solid 3px green" : "solid 3px red";
+  });
+
+  player2Input.addEventListener("input", function () {
+    player2Input.style.border =
+      player2Input.value !== "" ? "solid 3px green" : "solid 3px red";
+  });
+
   return {
     gridContainer,
     player1Input,
@@ -127,8 +138,20 @@ const startGame = (function () {
       domReference.player1Input.disabled = true;
       domReference.player2Input.disabled = true;
 
-      //Player Turn
+      // Player Turn
       playerTurnModule.initializePlayers(player1, player2);
+
+      // Add green border for current players input and red border for next players input
+      const highlightCurrentPlayer = function () {
+        const current = playerTurnModule.currentPlayer();
+        if (player1.name === current.name) {
+          domReference.player1Input.style.border = "solid 3px green";
+          domReference.player2Input.style.border = "solid 3px red";
+        } else {
+          domReference.player2Input.style.border = "solid 3px green";
+          domReference.player1Input.style.border = "solid 3px red";
+        }
+      };
 
       // Determine who goes first based on which player's index was randomly chosen
       const firstTurn = playerTurnModule.currentPlayer();
@@ -140,6 +163,7 @@ const startGame = (function () {
       console.log(
         `${firstTurn.name} Will Go First! Place Your "${firstTurn.mark}" On An Empty Square!`
       );
+      highlightCurrentPlayer();
 
       // Arrays to keep track of each player's chosen square (index) to match the winning array
       let player1SquareIndex = [];
@@ -189,7 +213,12 @@ const startGame = (function () {
             console.log(`Total Moves: ${totalMoves} out of 9`);
 
             // If the total moves of the game go to 9, then it's a draw
-            if (totalMoves === 9) {
+            if (totalMoves === 9 && winner) {
+              alert(`Game Over! ${currentPlayer.name} Wins The Game!`);
+              console.log(`Game Over! ${currentPlayer.name} Wins The Game!`);
+              endGame.disableSquareClick();
+              return;
+            } else if (totalMoves === 9) {
               alert(`Game Over! It's A Draw!`);
               console.log(`Game Over! It's A Draw!`);
               endGame.disableSquareClick();
@@ -209,6 +238,7 @@ const startGame = (function () {
             console.log(
               `${playerTurnModule.currentPlayer().name}'s Turn Is Next!`
             );
+            highlightCurrentPlayer();
           });
         }
       };
@@ -237,6 +267,8 @@ const resetGame = (function () {
     domReference.player2Input.disabled = false;
     domReference.player1Input.value = "";
     domReference.player2Input.value = "";
+    domReference.player1Input.style.border = "solid 3px red";
+    domReference.player2Input.style.border = "solid 3px red";
     domReference.gridContainer.innerHTML = "";
     domReference.startButton.style.display = "flex";
   });

@@ -1,6 +1,28 @@
+* {
+  font-family: "Courier New", Courier, monospace;
+}
+
 body html {
   margin: 0;
   height: 100vh;
+}
+
+html {
+  background-color: rgb(63, 63, 70);
+}
+
+h1 {
+  color: whitesmoke;
+}
+
+#logo {
+  display: inline-flex;
+  width: 4rem;
+}
+
+#title {
+  display: flex;
+  gap: 20px;
 }
 
 #main-container {
@@ -16,6 +38,9 @@ body html {
   grid-template-rows: repeat(3, 1fr);
   align-items: center;
   justify-content: center;
+  background-color: whitesmoke;
+  border-radius: 10px;
+  margin-top: 2%;
 }
 
 #controls {
@@ -41,11 +66,28 @@ input {
   padding: 1rem;
   font-size: 1rem;
   font-weight: bold;
-  outline: none;
+  border: solid 3px red;
+  border-radius: 10px;
+  background-color: whitesmoke;
+}
+
+input:focus {
+  border: none;
+  outline: solid 3px orange;
+  background-color: whitesmoke;
 }
 
 button {
   padding: 1rem;
-  font-size: 1rem;
+  font-size: 1.2rem;
   font-weight: bold;
+  border-radius: 10px;
+}
+
+#startBtn {
+  background-color: green;
+}
+
+#resetBtn {
+  background-color: red;
 }
